@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
-using Better.Application.Customers.DTO;
-using Better.Application.Users;
+using AutoMapper.QueryableExtensions;
+using Better.Application.Common.Models;
+using Better.Application.DTO;
+using Better.Application.Queries;
+using Better.Infrastructure.Mappings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Better.Infrastructure.Data.Queries;
@@ -23,5 +26,16 @@ public class UserQueryService : IUserQueryService
            .FirstOrDefaultAsync(u => u.Id == id);
 
         return _mapper.Map<UserDto>(user);
+    }
+
+    public async Task<PaginatedList<GoalDto>> GetGoalsByUserId(int id, int pageNumber, int pageSize)
+    {
+        return await _dbContext.Goals
+            .Include(g => g.FinancialEntity)
+            .Include(g => g.Portfolio)
+            .Where(g => g.UserId == id)
+            .OrderByDescending(g => g.Created)
+            .ProjectTo<GoalDto>(_mapper.ConfigurationProvider)
+            .PaginatedListAsync(pageNumber, pageSize);
     }
 }
