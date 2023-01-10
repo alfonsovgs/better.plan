@@ -2,7 +2,7 @@
 using Better.Application.Common.Mappings;
 using Better.Core.Entities;
 
-namespace Better.Application.Customers.DTO;
+namespace Better.Application.DTO;
 
 public class UserDto : IMapFrom<User>
 {
