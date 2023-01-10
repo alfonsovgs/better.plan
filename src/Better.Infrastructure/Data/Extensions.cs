@@ -1,4 +1,4 @@
-﻿using Better.Application.Users;
+﻿using Better.Application.Queries;
 using Better.Infrastructure.Data.Queries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
