@@ -1,3 +1,5 @@
+using Better.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerGen();
+
+builder.Services
+    .AddInfrastructure();
 
 var app = builder.Build();
 
