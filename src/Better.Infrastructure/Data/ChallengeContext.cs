@@ -1,16 +1,17 @@
 ﻿using Better.Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Better.Infrastructure.Data
 {
     public class ChallengeContext : DbContext
     {
-        private readonly IConfiguration _configuration;
-
-        public ChallengeContext(IConfiguration configuration)
+        public ChallengeContext(DbContextOptions<ChallengeContext> options)
+            : base(options)
         {
-            _configuration = configuration;
+        }
+
+        public ChallengeContext()
+        {
         }
 
         public virtual DbSet<CompositionCategory> CompositionCategories { get; set; } = null!;
@@ -32,9 +33,6 @@ namespace Better.Infrastructure.Data
         public virtual DbSet<PortfolioFunding> PortfolioFundings { get; set; } = null!;
         public virtual DbSet<Risklevel> RiskLevels { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseNpgsql(_configuration.GetConnectionString("SqlConnection"));
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
