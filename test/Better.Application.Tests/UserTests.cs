@@ -35,7 +35,9 @@ public class UserTests
         var mockContext = new Mock<ChallengeContext>();
         mockContext.Setup(m => m.Users).Returns(data.Object);
 
-        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper);
+        var mockBalanceService = new Mock<IBalanceService>();
+
+        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper, mockBalanceService.Object);
 
         var result = await service.GetUser(1);
 
@@ -54,7 +56,9 @@ public class UserTests
         var mockContext = new Mock<ChallengeContext>();
         mockContext.Setup(m => m.Users).Returns(data.Object);
 
-        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper);
+        var mockBalanceService = new Mock<IBalanceService>();
+
+        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper, mockBalanceService.Object);
 
         var result = await service.GetUser(2);
 
@@ -73,7 +77,9 @@ public class UserTests
         var mockContext = new Mock<ChallengeContext>();
         mockContext.Setup(m => m.Goals).Returns(data.Object);
 
-        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper);
+        var mockBalanceService = new Mock<IBalanceService>();
+
+        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper, mockBalanceService.Object);
 
         var result = await service.GetGoalsByUserId(1, 1, 5);
         result.ShouldNotBeNull();
@@ -83,5 +89,47 @@ public class UserTests
         result.TotalCount.ShouldBe(10);
         result.HasPreviousPage.ShouldBeFalse();
         result.HasNextPage.ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task GetSummaryByUserId_Returns_BalanceSummary()
+    {
+        var mockContext = new Mock<ChallengeContext>();
+        var mockBalanceService = new Mock<IBalanceService>();
+
+        mockBalanceService.Setup(m => m.GetBalanceByUserId(It.IsAny<int>()))
+            .Returns((int id) =>
+            {
+                Balance balance = new()
+                {
+                    CurrentAmount = 1_000,
+                    TargetAmount = 10_000,
+                    TotalContributions = 1_000,
+                    TotalWithdrawal = 0
+                };
+                return Task.FromResult(balance);
+            });
+
+        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper,
+            mockBalanceService.Object);
+
+        var result = await service.GetSummaryByUserId(1);
+        result.ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task GetSummaryByUserId_Returns_BalanceSummary_As_Null()
+    {
+         var mockContext = new Mock<ChallengeContext>();
+        var mockBalanceService = new Mock<IBalanceService>();
+
+        mockBalanceService.Setup(m => m.GetBalanceByUserId(It.IsAny<int>()))
+            .Returns(Task.FromResult((Balance?)null));
+
+        IUserQueryService service = new UserQueryService(mockContext.Object, _mapper,
+            mockBalanceService.Object);
+
+        var result = await service.GetSummaryByUserId(1);
+        result.ShouldBeNull();
     }
 }
