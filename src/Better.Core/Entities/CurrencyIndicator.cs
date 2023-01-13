@@ -2,6 +2,8 @@
 
 public partial class CurrencyIndicator
 {
+    public static CurrencyIndicator Default = new() { Value = 1 };
+
     public int Id { get; set; }
     public int SourceCurrencyId { get; set; }
     public int DestinationCurrencyId { get; set; }

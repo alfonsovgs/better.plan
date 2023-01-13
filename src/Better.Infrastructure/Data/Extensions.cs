@@ -1,5 +1,7 @@
 ﻿using Better.Application.Queries;
+using Better.Core.Repositories;
 using Better.Infrastructure.Data.Queries;
+using Better.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,5 +16,7 @@ internal static class Extensions
             {
                 options.UseNpgsql(configuration.GetConnectionString("SqlConnection"));
             })
-            .AddScoped<IUserQueryService, UserQueryService>();
+            .AddScoped<IUserQueryService, UserQueryService>()
+            .AddScoped<ICurrencyIndicatorRepository, CurrencyIndicatorRepository>()
+            .AddScoped<ITransactionMovementRepository, TransactionMovementRepository>();
 }
