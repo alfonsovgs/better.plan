@@ -26,6 +26,18 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
+    [HttpGet("{id}/summary")]
+    public async Task<IActionResult> GetSummaryByUserId(int id)
+    {
+        var result = await _userQuery.GetSummaryByUserId(id);
+        if (result is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
     [HttpGet("{id}/goals")]
     public async Task<IActionResult> GetGoalsByUserId(int id, int pageNumber = 1, int pageSize = 10)
     {
