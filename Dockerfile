@@ -21,6 +21,6 @@ FROM base as final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-ENV ConnectionStrings__SqlConnection="User ID=challengeuser;Password=challengepass;Server=104.197.55.31;Port=5432;Database=challenge;Integrated Security=true;Pooling=true;"
+ENV ConnectionStrings__SqlConnection=""
 
 ENTRYPOINT ["dotnet", "Better.Api.dll"]
