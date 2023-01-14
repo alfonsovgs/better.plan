@@ -24,14 +24,30 @@ internal class BalanceService : IBalanceService
             return null;
         }
 
+        return await CalculateBalance(movements);
+    }
+
+    public async Task<Balance> GetBalanceByGoalId(int userId, int goalId)
+    {
+        var movements = await _repository.GetById(userId, goalId);
+        if(!movements.Any())
+        {
+            return null;
+        }
+
+        return await CalculateBalance(movements);
+    }
+
+    private async Task<Balance> CalculateBalance(IEnumerable<TransactionMovement> transactionMovements)
+    {
         Balance balance = new()
         {
-            TargetAmount = movements.FirstOrDefault().TargetAmount,
-            TotalWithdrawal = movements.Where(m => m.Type == "sale").Sum(x => x.Amount),
-            TotalContributions = movements.Where(m => m.Type == "buy").Sum(x => x.Amount),
+            TargetAmount = transactionMovements.FirstOrDefault().TargetAmount,
+            TotalWithdrawal = transactionMovements.Where(m => m.Type == "sale").Sum(x => x.Amount),
+            TotalContributions = transactionMovements.Where(m => m.Type == "buy").Sum(x => x.Amount),
         };
 
-        var movementsGrouped = movements.GroupBy(m => new
+        var movementsGrouped = transactionMovements.GroupBy(m => new
         {
             m.SourceCurrency,
             m.DisplayCurrency,

@@ -1,4 +1,6 @@
-﻿using Better.Application.Queries;
+﻿using Better.Application.Common.Models;
+using Better.Application.DTO;
+using Better.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Better.Api.Controllers;
@@ -15,7 +17,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    public async Task<ActionResult<UserDto>> Get(int id)
     {
         var user = await _userQuery.GetUser(id);
         if (user is null)
@@ -27,7 +29,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}/summary")]
-    public async Task<IActionResult> GetSummaryByUserId(int id)
+    public async Task<ActionResult<SummaryDto>> GetSummaryByUserId(int id)
     {
         var result = await _userQuery.GetSummaryByUserId(id);
         if (result is null)
@@ -39,7 +41,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("{id}/goals")]
-    public async Task<IActionResult> GetGoalsByUserId(int id, int pageNumber = 1, int pageSize = 10)
+    public async Task<ActionResult<PaginatedList<GoalDto>>> GetGoalsByUserId(int id, int pageNumber = 1, int pageSize = 10)
     {
         var user = await _userQuery.GetGoalsByUserId(id, pageNumber, pageSize);
         if (user is null)
@@ -48,5 +50,17 @@ public class UserController : ControllerBase
         }
 
         return Ok(user);
+    }
+
+    [HttpGet("{id}/goals/{goalId}")]
+    public async Task<ActionResult<GoalDetailDto>> GetGoalDetail(int id, int goalId)
+    {
+        var result = await _userQuery.GetGoalDetail(id, goalId);
+        if (result is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
     }
 }

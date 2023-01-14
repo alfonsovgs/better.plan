@@ -47,4 +47,31 @@ public class UserQueryService : IUserQueryService
         var result = await _balanceService.GetBalanceByUserId(id);
         return _mapper.Map<SummaryDto>(result);
     }
+
+    public async Task<GoalDetailDto> GetGoalDetail(int id, int goalId)
+    {
+        var goal = await _dbContext.Goals
+            .Include(g => g.GoalCategory)
+            .Include(g => g.FinancialEntity)
+            .Where(g => g.UserId == id && g.Id == goalId)
+            .AsNoTracking()
+            .ProjectTo<GoalDetailDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync();
+        
+        if(goal is null)
+        {
+            return null;
+        }
+
+        var balance = await _balanceService.GetBalanceByGoalId(id, goalId);
+        if(balance is null)
+        {
+            return null;
+        }
+
+        goal.Percentaje = balance.Percentaje;
+        goal.TotalContributions = balance.TotalContributions;
+        goal.TotalWithdrawal = balance.TotalWithdrawal;
+        return goal;
+    }
 }
