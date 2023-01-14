@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Better.Core", "src\Better.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Better.Infrastructure", "src\Better.Infrastructure\Better.Infrastructure.csproj", "{29E477E6-C317-4BEA-9EFD-E7AEFF6EE33F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Better.Application.Tests", "test\Better.Application.Tests\Better.Application.Tests.csproj", "{195E3B38-B0D2-47A1-90D2-291461392287}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Better.Application.Tests", "test\Better.Application.Tests\Better.Application.Tests.csproj", "{195E3B38-B0D2-47A1-90D2-291461392287}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
