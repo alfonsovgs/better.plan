@@ -1,4 +1,4 @@
-﻿using Better.Application.Queries;
+using Better.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Better.Api.Controllers;
@@ -48,5 +48,17 @@ public class UserController : ControllerBase
         }
 
         return Ok(user);
+    }
+
+    [HttpGet("{id}/goals/{goalId}")]
+    public async Task<ActionResult<GoalDetailDto>> GetGoalDetail(int id, int goalId)
+    {
+        var result = await _userQuery.GetGoalDetail(id, goalId);
+        if (result is null)
+        {
+            return NotFound();
+}
+
+        return Ok(result);
     }
 }
